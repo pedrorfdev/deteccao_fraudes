@@ -66,10 +66,14 @@ o F1 de 0.8865 é o melhor resultado entre todas as combinações testadas.
 ## Explicabilidade
 
 Importância de variáveis do Random Forest (`feature_importances_`), mostrando quais colunas
-mais pesam nas decisões do modelo.
-
-**Preencher:** quais variáveis apareceram como mais relevantes para marcar uma transação como
-fraude.
+mais pesam nas decisões do modelo. As 6 variáveis mais relevantes foram, em ordem: **V14, V10,
+V12, V4, V17 e V11** — juntas, concentram a maior parte da importância total do modelo (V14
+sozinha já responde por 0,20 de importância, bem à frente das demais). Como as colunas `V1`
+a `V28` são componentes gerados por PCA, elas não têm um significado de negócio direto (ex.
+"valor da compra" ou "categoria do comerciante") — o PCA existe justamente para anonimizar os
+dados originais —, então a leitura possível aqui é estrutural: um pequeno grupo de variáveis
+concentra a maior parte do poder discriminativo do modelo, enquanto o restante contribui
+pouco.
 
 ## O que mudei em relação ao pipeline da Expert
 
