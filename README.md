@@ -35,20 +35,33 @@ anonimizadas por PCA).
 | Regressão Logística (baseline) | `class_weight="balanced"` |
 | Random Forest | `class_weight="balanced"` |
 
-**Preencher após rodar o notebook** (métricas da classe de fraude, limiar padrão 0.5):
+Métricas da classe de fraude, limiar padrão 0.5:
 
 | Modelo | Recall | Precisão | F1 | ROC AUC | PR AUC |
 |---|---|---|---|---|---|
-| Regressão Logística | | | | | |
-| Random Forest | | | | | |
+| Regressão Logística | 0.9184 | 0.0614 | 0.1151 | 0.9719 | 0.7164 |
+| Random Forest | 0.7551 | 0.9610 | 0.8457 | 0.9569 | 0.8653 |
+
+A Regressão Logística detecta quase toda fraude, mas gera muito falso alarme (precisão baixa).
+O Random Forest é bem mais equilibrado. Vale notar que o ROC AUC engana um pouco aqui: como a
+classe normal é enorme (56.864 casos no teste), a taxa de falso positivo fica achatada e infla
+o AUC mesmo quando o modelo erra bastante em termos absolutos. O **PR AUC é a métrica mais
+confiável nesse desbalanceamento**, e nele o Random Forest é melhor (0.8653 vs 0.7164).
 
 ## Limiar de decisão
 
 O notebook varre limiares de 0.01 a 0.99 e escolhe, para cada modelo, o que maximiza o F1 da
-classe de fraude.
+classe de fraude:
 
-**Preencher:** limiar final escolhido, modelo escolhido e a justificativa (ex: priorização de
-recall vs. precisão conforme o custo de negócio de deixar fraude passar vs. gerar falso alarme).
+| Modelo | Limiar ótimo | Recall | Precisão | F1 |
+|---|---|---|---|---|
+| Regressão Logística | 0.99 | 0.8469 | 0.5764 | 0.6860 |
+| Random Forest | 0.27 | 0.8367 | 0.9425 | 0.8865 |
+
+**Modelo e limiar final escolhidos: Random Forest, limiar 0.27.** Com esse ajuste, o recall
+sobe de 75,5% (limiar padrão) para 83,7%, sem sacrificar muito a precisão (cai de 96,1% para
+94,3%). É o melhor equilíbrio entre detectar fraude e não gerar excesso de falso alarme — e
+o F1 de 0.8865 é o melhor resultado entre todas as combinações testadas.
 
 ## Explicabilidade
 
@@ -60,9 +73,10 @@ fraude.
 
 ## O que mudei em relação ao pipeline da Expert
 
-**Preencher:** liste aqui o que você adaptou em relação ao que foi mostrado nas aulas (ex:
-comparação com apenas 2 modelos em vez de vários, ajuste de limiar por F1 em vez do padrão 0.5,
-importância de variáveis em vez de SHAP).
+- Comparei apenas 2 modelos (Regressão Logística e Random Forest) em vez de incluir XGBoost;
+- Usei importância de variáveis do Random Forest em vez de SHAP para a explicabilidade;
+- Ajustei o limiar de decisão maximizando o F1 da fraude para cada modelo, em vez de usar
+  só o limiar padrão de 0.5.
 
 ## Como rodar
 
